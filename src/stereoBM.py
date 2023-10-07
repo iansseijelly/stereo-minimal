@@ -22,22 +22,24 @@ if __name__ == '__main__':
 
     # read images as grayscale
     imgL = cv2.imread(args.left)
-    cv2.imshow('left', imgL)
-    # imgR = cv2.imread(args.right, 0)
+    # cv2.imshow('left', imgL)
+    # cv2.waitKey(0)  # Wait indefinitely until a key is pressed
+    # cv2.destroyAllWindows()  # Close all OpenCV windows
+    imgR = cv2.imread(args.right)
 
-    # # create stereo matcher with parameters
-    # stereo = stereoBM_init(args.num_disparity, block_size)
+    # create stereo matcher with parameters
+    stereo = stereoBM_init(args.num_disparity, block_size)
 
-    # gray_left = cv2.cvtColor(imgL, cv2.COLOR_BGR2GRAY, imgL)
-    # gray_right = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY, imgR)
+    gray_left = cv2.cvtColor(imgL, cv2.COLOR_BGR2GRAY, imgL)
+    gray_right = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY, imgR)
 
-    # # compute disparity
-    # disparity = stereo.compute(gray_left, gray_right)
+    # compute disparity
+    disparity = stereo.compute(gray_left, gray_right)
 
-    # # normalize output
-    # disparity = cv2.normalize(disparity, disparity, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+    # normalize output
+    disparity = cv2.normalize(disparity, disparity, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
 
-    # # show result
-    # cv2.imshow('disparity', disparity)
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    # show result
+    cv2.imshow('disparity', disparity)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

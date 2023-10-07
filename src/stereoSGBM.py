@@ -2,9 +2,14 @@ import cv2
 import numpy as np
 import argparse
 
-def stereoBM_init(numDisparities, blockSize):
-    stereo = cv2.StereoBM_create(numDisparities=numDisparities, blockSize=blockSize)
+def stereoSGBM_init(numDisparities, blockSize, mode):
+    stereo = cv2.StereoSGBM_create(numDisparities=numDisparities, blockSize=blockSize)
+    # mode name to index mapping
+    mode_dict = {'SGBM': 0, 'HH': 1, 'HH4': 2, 'HH5': 3}
+    mode_idx = mode_dict[mode]
+    stereo.setMode(mode_idx)
     return stereo
+
 
 # simple arguments parser
 if __name__ == '__main__':
@@ -13,6 +18,7 @@ if __name__ == '__main__':
     parser.add_argument('--right', type=str, help='right image file', required=True)
     parser.add_argument('--num-disparity', type=int, help='disparity', default=128)
     parser.add_argument('--block-size', type=int, help='block size', default=9)
+    parser.add_argument('--mode', type=str, help='mode', default='SGBM')
     args = parser.parse_args()
 
     block_size = args.block_size
@@ -25,9 +31,9 @@ if __name__ == '__main__':
     # cv2.waitKey(0)  # Wait indefinitely until a key is pressed
     # cv2.destroyAllWindows()  # Close all OpenCV windows
     imgR = cv2.imread(args.right)
-
+    
     # create stereo matcher with parameters
-    stereo = stereoBM_init(args.num_disparity, block_size)
+    stereo = stereoSGBM_init(args.num_disparity, block_size, args.mode)
 
     gray_left = cv2.cvtColor(imgL, cv2.COLOR_BGR2GRAY, imgL)
     gray_right = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY, imgR)
@@ -44,4 +50,4 @@ if __name__ == '__main__':
     cv2.destroyAllWindows()
 
     #save output
-    cv2.imwrite('output/img/disparityBM.png', disparity)
+    cv2.imwrite('output/img/disparitySGBM.png', disparity)

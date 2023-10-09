@@ -1,2 +1,2 @@
-python3 src/stereoBM.py --left data/lotus/lotus-left.png --right data/lotus/lotus-right.png --num-disparity 128 --block-size 9
-python3 src/stereoSGBM.py --left data/lotus/lotus-left.png --right data/lotus/lotus-right.png  --num-disparity 128 --block-size 9 --mode SGBM
+python3 src/python/stereoBM.py --left data/lotus/lotus-left.png --right data/lotus/lotus-right.png --num-disparity 128 --block-size 9
+python3 src/python/stereoSGBM.py --left data/lotus/lotus-left.png --right data/lotus/lotus-right.png  --num-disparity 128 --block-size 9 --mode SGBM

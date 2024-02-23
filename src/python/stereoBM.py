@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import argparse
+import matplotlib.pyplot as plt
 
 def stereoBM_init(numDisparities, blockSize):
     stereo = cv2.StereoBM_create(numDisparities=numDisparities, blockSize=blockSize)
@@ -34,14 +35,23 @@ if __name__ == '__main__':
 
     # compute disparity
     disparity = stereo.compute(gray_left, gray_right)
+    print(disparity.shape)
+    # print the max, min, and mean of the disparity
+    print(f"Max: {np.max(disparity)}, Min: {np.min(disparity)}, Mean: {np.mean(disparity)}")
+    # generate a distribution of the values
+    plt.hist(disparity.ravel(), 256, [0, 256])
+    # save the histogram
+    plt.savefig('output/img/python_histogram.png')
 
     # normalize output
     disparity = cv2.normalize(disparity, disparity, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
-
+    disparity = cv2.applyColorMap(disparity, cv2.COLORMAP_JET)
+    # print the max, min, and mean of the disparity
+    # print(f"Max: {np.max(disparity)}, Min: {np.min(disparity)}, Mean: {np.mean(disparity)}")
     # show result
-    cv2.imshow('disparity', disparity)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow('disparity', disparity)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     #save output
     cv2.imwrite('output/img/disparityBM.png', disparity)

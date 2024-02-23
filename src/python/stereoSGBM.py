@@ -45,9 +45,9 @@ if __name__ == '__main__':
     disparity = cv2.normalize(disparity, disparity, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
 
     # show result
-    cv2.imshow('disparity', disparity)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.imshow('disparity', disparity)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
 
     #save output
     cv2.imwrite('output/img/disparitySGBM.png', disparity)

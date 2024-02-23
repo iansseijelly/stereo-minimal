@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     raw_left = gray_left.tobytes()
     #print the last 10 bytes
-    print(raw_left[-10:])
+    # print(raw_left[-10:])
     height, width = gray_left.shape
     print(f"Height: {height}, Width: {width}")
     raw_right = gray_right.tobytes()
@@ -30,3 +30,5 @@ if __name__ == '__main__':
         f.write(raw_left)
     with open('output/intermediate/right', 'wb') as f:
         f.write(raw_right)
+    with open('output/intermediate/dimensions', 'w') as f:
+        f.write(f"{height},{width}")

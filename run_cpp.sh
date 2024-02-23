@@ -1,0 +1,1 @@
+python3 src/cpp/util.py --left data/lotus/lotus-left.png --right data/lotus/lotus-right.png 

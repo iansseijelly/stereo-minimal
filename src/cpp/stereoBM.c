@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 typedef struct {
     int width;
@@ -17,7 +18,6 @@ Image *load_image(const char *file_path) {
     // Get the file size
     fseek(file, 0, SEEK_END);
     long file_size = ftell(file);
-    printf("File size: %ld\n", file_size);
     fseek(file, 0, SEEK_SET);
 
     // Allocate memory for the image data
@@ -63,19 +63,88 @@ void free_image(Image *image) {
     }
 }
 
-int main() {
-    const char *file_path = "../../output/intermediate/left";
-    Image *image = load_image(file_path);
-    if (!image) {
-        return 1;
+int square(char x) {
+    return (int)x*(int)x;
+}
+
+// Core function computing stereoBM
+Image* compute_dispartiy(Image *left, Image *right, int min_disparity, int max_disparity, int half_block_size) {
+    // allocate data for disparity, use calloc for 0 initialization
+    int SSD = 0;
+    int min_SSD = INT32_MAX;
+    int l_r, l_c, r_r, r_c;
+    int height = left->height;
+    int width = left->width;
+
+    unsigned char *disparity = (unsigned char *)calloc(width*height, sizeof(unsigned char));
+    if (!disparity) {
+        printf("Error: Memory allocation failed\n");
+        return NULL;
     }
 
-    // Access the image data using image->data
-    // Example: Accessing pixel at row 0, column 0, and channel 0 (R) 
-    int row = 1080-1, col = 1920-1;
-    unsigned char pixel_value = image->data[row*image->width+col];
-    printf("Pixel value last: %x\n", pixel_value);
+    // compute disparity
+    for (int i=0+half_block_size; i<height-half_block_size; i++) {
+        for (int j=0+half_block_size; j<width-half_block_size; j++) {
+            // inner loop per block
+            min_SSD = INT32_MAX;
+            for (int range=min_disparity; range<max_disparity; range++) {
+                SSD = 0;
+                // inner loop per pixel
+                for (l_r = i-half_block_size; l_r <= half_block_size+i; l_r++) {
+                    for (l_c = j-half_block_size; l_c <= half_block_size+j; l_c++) {
+                        r_r = l_r;
+                        r_c = l_c + range;
+                        SSD += square(left->data[l_r*width+l_c] - right->data[r_r*width+r_c]);
+                    }
+                }
+                if (SSD < min_SSD) {
+                    min_SSD = SSD;
+                    disparity[i*width+j] = range;
+                }
+            }
+            // printf("Disparity for pixel at (%d, %d) is %d\n", i, j, disparity[i*width+j]);
+        }
+    }
 
-    free_image(image);
+    Image *disparity_image = (Image *)malloc(sizeof(Image));
+    if (!disparity_image) {
+        printf("Error: Memory allocation failed\n");
+        free(disparity);
+        return NULL;
+    }
+    disparity_image->width = width;
+    disparity_image->height = height;
+    disparity_image->data = disparity;
+    return disparity_image;
+}
+
+int main() {
+    const char *left_file_path = "../../output/intermediate/left";
+    const char *right_file_path = "../../output/intermediate/right";
+    Image *left_image = load_image(left_file_path);
+    if (!left_image) {
+        return 1;
+    }
+    Image *right_image = load_image(right_file_path);
+    if (!right_image) {
+        free_image(left_image);
+        return 1;
+    }
+    Image *disparity_image = compute_dispartiy(left_image, right_image, -16, 16, 4);
+    // Save the disparity image
+    FILE *file = fopen("../../output/intermediate/disparity", "wb");
+    if (!file) {
+        printf("Error: Could not open file for writing\n");
+        free_image(left_image);
+        free_image(right_image);
+        free_image(disparity_image);
+        return 1;
+    }
+    // write only the data
+    fwrite(disparity_image->data, 1, disparity_image->width*disparity_image->height, file);
+    fclose(file);
+    free_image(left_image);
+    free_image(right_image);
+    free_image(disparity_image);
     return 0;
 }

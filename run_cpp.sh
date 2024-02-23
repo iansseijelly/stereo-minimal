@@ -1,4 +1,4 @@
-python3 src/cpp/util_write.py --left data/cones/left.png --right data/right.png 
+python3 src/cpp/util_write.py --left data/cones/left.png --right data/cones/right.png 
 cd src/cpp
 gcc -o stereoBM stereoBM.c
 ./stereoBM

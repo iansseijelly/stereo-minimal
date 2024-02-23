@@ -80,8 +80,6 @@ Image *load_image(const char *file_path) {
         fclose(file);
         return NULL;
     }
-    // printf("image->width: %d\n", image->width);
-    // printf("image->height: %d\n", image->height);
     // Set the image data pointer
     image->data = data;
 
@@ -109,9 +107,10 @@ Disp_Image* compute_dispartiy(Image *left, Image *right, int min_disparity, int 
     }
 
     // compute disparity
+    // outer loop iterating over blocks
     for (int i=0+half_block_size; i<height-half_block_size; i++) {
         for (int j=0+half_block_size+min_disparity; j<width-half_block_size-max_disparity; j++) {
-            // inner loop per block
+            // middle loop per block
             min_SAD = INT32_MAX;
             for (int range=min_disparity; range<max_disparity; range++) {
                 SAD = 0;
@@ -123,15 +122,11 @@ Disp_Image* compute_dispartiy(Image *left, Image *right, int min_disparity, int 
                         SAD += abs(left->data[l_r*width+l_c] - right->data[r_r*width+r_c]);
                     }
                 }
-                // if (i == half_block_size && j == half_block_size) {
-                //     printf("SAD for pixel at (%d, %d) with range %d is %d\n", i, j, range, SAD);
-                // }
                 if (SAD < min_SAD) {
                     min_SAD = SAD;
                     disparity[i*width+j+max_disparity] = range;
                 }
             }
-            // printf("Disparity for pixel at (%d, %d) is %d\n", i, j, disparity[i*width+j]);
         }
     }
 

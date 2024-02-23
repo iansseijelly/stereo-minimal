@@ -1,3 +1,5 @@
+// This code is adapted from the following source:
+// https://github.com/ankitdhall/stereo-block-matching/blob/master/sbm.cpp
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>

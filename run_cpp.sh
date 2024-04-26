@@ -1,5 +1,5 @@
-# python3 src/cpp/util_write.py --left data/tunnel/left.png --right data/tunnel/right.png 
-python3 src/cpp/util_write.py --left data/sewer/left.png --right data/sewer/right.png
+python3 src/cpp/util_write.py --left data/cones/left.png --right data/cones/right.png 
+# python3 src/cpp/util_write.py --left data/lab/left.png --right data/lab/right.png
 cd src/cpp
 gcc -o stereoBM stereoBM.c
 ./stereoBM

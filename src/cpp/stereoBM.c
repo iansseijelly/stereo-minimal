@@ -109,22 +109,30 @@ Disp_Image* compute_dispartiy(Image *left, Image *right, int min_disparity, int 
     // compute disparity
     // outer loop iterating over blocks
     for (int i=0+half_block_size; i<height-half_block_size; i++) {
-        for (int j=0+half_block_size+min_disparity; j<width-half_block_size-max_disparity; j++) {
+        for (int j=0+half_block_size-min_disparity; j<width-half_block_size-max_disparity; j++) {
             // middle loop per block
             min_SAD = INT32_MAX;
-            for (int range=min_disparity; range<max_disparity; range++) {
+            for (int offset=min_disparity; offset<max_disparity; offset++) {
                 SAD = 0;
-                // inner loop per pixel
+                // inner loop per pixel: compute SAD
                 for (l_r = i-half_block_size; l_r < half_block_size+i; l_r++) {
                     for (l_c = j-half_block_size; l_c < half_block_size+j; l_c++) {
                         r_r = l_r;
-                        r_c = l_c + range;
+                        r_c = l_c + offset;
                         SAD += abs(left->data[l_r*width+l_c] - right->data[r_r*width+r_c]);
+                        if (i == half_block_size && j == half_block_size && offset == 5){
+                            printf("SAD: %x, l_data: %x, r_data: %x\n", SAD, left->data[l_r*width+l_c], right->data[r_r*width+r_c]);
+                        }
                     }
                 }
+                // reduction step
                 if (SAD < min_SAD) {
+                    // if (i == half_block_size) {
+                    //     printf("Updated min_SAD: %x, SAD: %x, j: %d, offset: %d\n", min_SAD, SAD, j, offset);
+                    // }
                     min_SAD = SAD;
-                    disparity[i*width+j+max_disparity] = range;
+                    
+                    disparity[i*width+j+max_disparity] = offset;
                 }
             }
         }
@@ -154,7 +162,7 @@ int main() {
         free_image(left_image);
         return 1;
     }
-    Disp_Image *disparity_image = compute_dispartiy(left_image, right_image, 0, 64, 4);
+    Disp_Image *disparity_image = compute_dispartiy(left_image, right_image, 0, 16, 4);
     // Save the disparity image
     FILE *file = fopen("../../output/intermediate/disparity", "wb");
     if (!file) {

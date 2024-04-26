@@ -18,6 +18,10 @@ if __name__ == '__main__':
     gray_left = cv2.cvtColor(imgL, cv2.COLOR_BGR2GRAY, imgL)
     gray_right = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY, imgR)
 
+    # # resize to 128*128
+    # gray_left = cv2.resize(gray_left, (128, 128))
+    # gray_right = cv2.resize(gray_right, (128, 128))
+
     raw_left = gray_left.tobytes()
     #print the last 10 bytes
     # print(raw_left[-10:])
@@ -32,3 +36,4 @@ if __name__ == '__main__':
         f.write(raw_right)
     with open('output/intermediate/dimensions', 'w') as f:
         f.write(f"{height},{width}")
+        

@@ -9,6 +9,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Simple stereo matching example.')
     parser.add_argument('--left', type=str, help='left image file', required=True)
     parser.add_argument('--right', type=str, help='right image file', required=True)
+    parser.add_argument('--height', type=int, help='height of the image', required=True)
+    parser.add_argument('--width', type=int, help='width of the image', required=True)
     args = parser.parse_args()
 
     # read images as grayscale
@@ -18,9 +20,9 @@ if __name__ == '__main__':
     gray_left = cv2.cvtColor(imgL, cv2.COLOR_BGR2GRAY, imgL)
     gray_right = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY, imgR)
 
-    # # resize to 128*128
-    # gray_left = cv2.resize(gray_left, (128, 128))
-    # gray_right = cv2.resize(gray_right, (128, 128))
+    # resizing 
+    gray_left = cv2.resize(gray_left, (args.height, args.width))
+    gray_right = cv2.resize(gray_right, (args.height, args.width))
 
     raw_left = gray_left.tobytes()
     #print the last 10 bytes

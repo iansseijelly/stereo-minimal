@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     # convert raw data to byte-by-byte, human-readable format
     with open('output/intermediate/dis_hex.txt', 'w') as f:
-        for i in range(128):
-            for j in range(128):
-                f.write(f"{raw_disp[i*128+j]:02X} ")
+        for i in range(256):
+            for j in range(256):
+                f.write(f"{raw_disp[i*256+j]:02X} ")
             f.write("\n")

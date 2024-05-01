@@ -24,6 +24,11 @@ if __name__ == '__main__':
     plt.savefig('output/img/c_histogram.png')
     # create a greyscale image from the numpy array
     disparity_normalized = cv2.normalize(disp, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+    # apply a gaussian filter to the disparity
+    disparity_undenoised = cv2.applyColorMap(disparity_normalized, cv2.COLORMAP_JET)
+    cv2.imwrite('output/img/c_disparity.png', disparity_undenoised)
+
+    disparity_normalized = cv2.GaussianBlur(disparity_normalized, (5, 5), 0)
     disparity_normalized = cv2.applyColorMap(disparity_normalized, cv2.COLORMAP_JET)
     # store the image
-    cv2.imwrite('output/img/c_disparity.png', disparity_normalized)
+    cv2.imwrite('output/img/c_disparity_gaussian.png', disparity_normalized)

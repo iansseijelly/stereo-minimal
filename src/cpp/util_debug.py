@@ -18,9 +18,9 @@ if __name__ == '__main__':
     gray_left = cv2.cvtColor(imgL, cv2.COLOR_BGR2GRAY, imgL)
     gray_right = cv2.cvtColor(imgR, cv2.COLOR_BGR2GRAY, imgR)
 
-    # resize to 128*128
-    gray_left = cv2.resize(gray_left, (128, 128))
-    gray_right = cv2.resize(gray_right, (128, 128))
+    # resize to 256*256
+    gray_left = cv2.resize(gray_left, (256, 256))
+    gray_right = cv2.resize(gray_right, (256, 256))
 
     raw_left = gray_left.tobytes()
     #print the last 10 bytes
@@ -39,14 +39,14 @@ if __name__ == '__main__':
     
     # convert raw data to byte-by-byte, human-readable format
     with open('output/intermediate/left_hex.txt', 'w') as f:
-        for i in range(128):
-            for j in range(128):
-                f.write(f"{raw_left[i*128+j]:02X} ")
+        for i in range(256):
+            for j in range(256):
+                f.write(f"{raw_left[i*256+j]:02X} ")
             f.write("\n")
     
     with open('output/intermediate/right_hex.txt', 'w') as f:
-        for i in range(128):
-            for j in range(128):
-                f.write(f"{raw_right[i*128+j]:02X} ")
+        for i in range(256):
+            for j in range(256):
+                f.write(f"{raw_right[i*256+j]:02X} ")
             f.write("\n")
         

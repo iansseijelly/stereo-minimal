@@ -177,7 +177,7 @@ int main() {
         free_image(left_image);
         return 1;
     }
-    Disp_Image *disparity_image = compute_dispartiy(left_image, right_image, 0, 32, 3);
+    Disp_Image *disparity_image = compute_dispartiy(left_image, right_image, 0, 36, 6);
     // Save the disparity image
     FILE *file = fopen("../../output/intermediate/disparity", "wb");
     if (!file) {

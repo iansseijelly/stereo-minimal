@@ -1,3 +1,3 @@
-python3 src/python/stereoBM.py --left data/motorcycle/left.png --right data/motorcycle/right.png --num-disparity 1024 --block-size 20
-python3 src/python/stereoSGBM.py --left data/motorcycle/left.png --right data/motorcycle/right.png  --num-disparity 1024 --block-size 20 --mode SGBM
-python3 src/python/stereoBMGaussian.py --left data/motorcycle/left.png --right data/motorcycle/right.png --num-disparity 1024 --block-size 20
+python3 src/python/stereoBM.py --left data/virginia/left.png --right data/virginia/right.png --num-disparity 48 --block-size 8
+python3 src/python/stereoSGBM.py --left data/virginia/left.png --right data/virginia/right.png  --num-disparity 48 --block-size 8 --mode SGBM
+# python3 src/python/stereoBMGaussian.py --left data/virginia/left.png --right data/virginia/right.png --num-disparity 1024 --block-size 20

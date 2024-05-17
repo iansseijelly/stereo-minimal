@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
 
 typedef struct {
     int width;
@@ -130,7 +131,7 @@ Image* compute_sobel_edge_detection(Image *image) {
         }
     }
 
-    signed char *edge_map = (signed char *)malloc(WIDTH*HEIGHT);
+    unsigned char *edge_map = (unsigned char *)malloc(WIDTH*HEIGHT);
     if (!edge_map) {
         printf("Error: Memory allocation failed\n");
         return NULL;
@@ -139,11 +140,11 @@ Image* compute_sobel_edge_detection(Image *image) {
     for (int y = 0; y < HEIGHT; y++) {
         for (int x = 0; x < WIDTH; x++) {
             // Calculate the magnitude of the gradient at each pixel
-            int16_t gx = gradient_x[y][x];
-            int16_t gy = gradient_y[y][x];
-            int16_t magnitude = (gx * gx + gy * gy);
+            int32_t gx = gradient_x[y][x];
+            int32_t gy = gradient_y[y][x];
+            int32_t magnitude = sqrt(square(gx) + square(gy));
             // Clamp the magnitude to [0, 255]
-            magnitude = magnitude > square(0) ? 255 : 0;
+            magnitude = magnitude > 255 ? 255 : magnitude;
             // Store the magnitude in the edge map
             edge_map[y*WIDTH+x] = magnitude;
         }

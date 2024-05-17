@@ -14,7 +14,7 @@ if __name__ == '__main__':
         # print(dimensions)
         height, width = dimensions.split(',')
     # convert to numpy array
-    disp = np.frombuffer(raw_disp, dtype=np.int8)
+    disp = np.frombuffer(raw_disp, dtype=np.uint8)
     # reshape to original shape
     disp = disp.reshape(int(height), int(width))
     print(f"max: {np.max(disp)}, min: {np.min(disp)}, mean: {np.mean(disp)}")
@@ -25,10 +25,10 @@ if __name__ == '__main__':
     # create a greyscale image from the numpy array
     disparity_normalized = cv2.normalize(disp, None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
     # apply a gaussian filter to the disparity
-    disparity_undenoised = cv2.applyColorMap(disparity_normalized, cv2.COLORMAP_JET)
-    cv2.imwrite('output/img/c_disparity.png', disparity_undenoised)
+    # disparity_undenoised = cv2.applyColorMap(disparity_normalized, cv2.COLORMAP_JET)
+    cv2.imwrite('output/img/c_disparity.png', disparity_normalized)
 
     disparity_normalized = cv2.GaussianBlur(disparity_normalized, (5, 5), 0)
-    disparity_normalized = cv2.applyColorMap(disparity_normalized, cv2.COLORMAP_JET)
+    # disparity_normalized = cv2.applyColorMap(disparity_normalized, cv2.COLORMAP_JET)
     # store the image
     cv2.imwrite('output/img/c_disparity_gaussian.png', disparity_normalized)

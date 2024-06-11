@@ -16,7 +16,7 @@ if __name__ == '__main__':
     # convert to numpy array
     disp = np.frombuffer(raw_disp, dtype=np.uint8)
     # reshape to original shape
-    disp = disp.reshape(int(height), int(width))
+    disp = disp.reshape(int(height)-8, int(width)-32-8)
     print(f"max: {np.max(disp)}, min: {np.min(disp)}, mean: {np.mean(disp)}")
     # generate a distribution of the values
     plt.hist(disp.ravel())

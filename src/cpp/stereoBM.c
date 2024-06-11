@@ -100,9 +100,13 @@ Disp_Image* compute_dispartiy(Image *left, Image *right, int min_disparity, int 
     int height = left->height;
     int width = left->width;
 
+    int search_range = max_disparity - min_disparity;
+    int s_w = width - 2*half_block_size - search_range;
+    int s_h = height - 2*half_block_size;
+
     int sad_iop = 0;
 
-    signed char *disparity = (signed char *)calloc(width*height, sizeof(signed char));
+    signed char *disparity = (signed char *)calloc(s_w*s_h, sizeof(signed char));
     if (!disparity) {
         printf("Error: Memory allocation failed\n");
         return NULL;
@@ -138,7 +142,7 @@ Disp_Image* compute_dispartiy(Image *left, Image *right, int min_disparity, int 
                     // }
                     min_SAD = SAD;
                     
-                    disparity[i*width+j+max_disparity] = offset;
+                    disparity[(i-half_block_size)*(s_w)+j-half_block_size] = offset;
                 }
             }
         }
@@ -159,8 +163,8 @@ Disp_Image* compute_dispartiy(Image *left, Image *right, int min_disparity, int 
         free(disparity);
         return NULL;
     }
-    disparity_image->width = width;
-    disparity_image->height = height;
+    disparity_image->width = s_w;
+    disparity_image->height = s_h;
     disparity_image->data = disparity;
     return disparity_image;
 }
@@ -177,7 +181,7 @@ int main() {
         free_image(left_image);
         return 1;
     }
-    Disp_Image *disparity_image = compute_dispartiy(left_image, right_image, 0, 36, 6);
+    Disp_Image *disparity_image = compute_dispartiy(left_image, right_image, 0, 32, 4);
     // Save the disparity image
     FILE *file = fopen("../../output/intermediate/disparity", "wb");
     if (!file) {
